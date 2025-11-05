@@ -86,7 +86,6 @@ for epoch in range(num_epochs):
     print(f"Époque [{epoch+1}/{num_epochs}] - Loss: {avg_loss:.4f}")
 
 
-
 model.eval()
 correct = 0
 total = 0
