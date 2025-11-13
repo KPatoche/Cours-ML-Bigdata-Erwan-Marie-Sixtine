@@ -22,6 +22,8 @@ from torch.utils.data import Subset
 from torch.utils.data import DataLoader
 import PIL
 import timm
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
 
 #On importe un modèle de vision transformer qui fonctionne en
 model = timm.create_model('vit_base_patch16_224', pretrained=True)
@@ -65,7 +67,11 @@ model = model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
-num_epochs = 10
+
+train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
+
+num_epochs = 5
 
 for epoch in range(num_epochs):
     model.train()
@@ -90,6 +96,9 @@ model.eval()
 correct = 0
 total = 0
 
+all_labels = []
+all_preds = []
+
 with torch.no_grad():
     for images, labels in test_loader:
         images, labels = images.to(device), labels.to(device)
@@ -97,5 +106,15 @@ with torch.no_grad():
         _, predicted = torch.max(outputs, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
+        all_labels.extend(labels.cpu().numpy())
+        all_preds.extend(predicted.cpu().numpy())
 
 print(f"Précision sur le test set: {100 * correct / total:.2f}%")
+cm = confusion_matrix(all_labels, all_preds)
+print(cm)
+
+
+class_names = test_loader.dataset.dataset.classes  # ou train_dataset.classes
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+disp.plot(cmap=plt.cm.Blues)
+plt.show()
