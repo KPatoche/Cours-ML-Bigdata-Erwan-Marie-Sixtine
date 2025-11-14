@@ -11,6 +11,31 @@ print("Racine du projet :", os.getcwd())
 base_dir = Path.cwd()
 os.chdir("C:/Users/erwan/Documents/M2+/BigDataLC/Projet Erwan-Marie-Sixtine")
 
+#On va renommer toutes les images de train
+train_lien = str(Path.cwd()) + "/train"
+for element in os.listdir(train_lien):
+    # Vérifie si c'est un dossier
+    if os.path.isdir(os.path.join(train_lien, element)):
+        image_lien = train_lien + "/" + element
+        print(image_lien)
+        for i, filename in enumerate(os.listdir(image_lien)):
+            print(filename)
+            os.rename(image_lien + "/" + filename, image_lien + "/" + "train" + element + str(i) + ".jpg")
+
+test_lien = str(Path.cwd()) + "/test"
+for element in os.listdir(test_lien):
+    # Vérifie si c'est un dossier
+    if os.path.isdir(os.path.join(test_lien, element)):
+        image_lien = test_lien + "/" + element
+        print(image_lien)
+        for i, filename in enumerate(os.listdir(image_lien)):
+            print(filename)
+            os.rename(image_lien + "/" + filename, image_lien + "/" + "test" + element + str(i) + ".jpg")
+
+
+
+
+import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -68,8 +93,8 @@ criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
 
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
+# train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+# test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
 
 num_epochs = 5
 
@@ -118,3 +143,6 @@ class_names = test_loader.dataset.dataset.classes  # ou train_dataset.classes
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
 disp.plot(cmap=plt.cm.Blues)
 plt.show()
+
+
+
