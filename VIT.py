@@ -144,5 +144,12 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
 disp.plot(cmap=plt.cm.Blues)
 plt.show()
 
+import torch
+print("Torch version:", torch.__version__)
+print("CUDA runtime version (from torch):", torch.version.cuda)
+print("cuda.is_available():", torch.cuda.is_available())
+
+if torch.cuda.is_available():
+    print("GPU détecté :", torch.cuda.get_device_name(0))
 
 
